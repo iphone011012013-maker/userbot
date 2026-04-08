@@ -53,7 +53,7 @@ pip install pyrogram deep-translator speechrecognition pydub requests tgcrypto
 > **ملاحظة:** لأداة تفريغ الصوت (`.v2t`)، يجب تثبيت `FFmpeg` على النظام.
 
 ### 2. إعدادات التشغيل
-قم بتعديل المتغيرات التالية في بداية الملف `userbot_merged.py`:
+قم بتعديل المتغيرات التالية في بداية الملف الرئيسي `main.py`:
 
 ```python
 API_ID = 26170736              # استبدله بـ API ID الخاص بك
@@ -63,7 +63,7 @@ OWNER_ID = 1431886140          # معرف حساب المالك (أبو الفض
 
 ### 3. تشغيل النظام
 ```bash
-python userbot_merged.py
+python main.py
 ```
 
 ---
