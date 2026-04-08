@@ -1,0 +1,50 @@
+name: Python package
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # تثبيت المكتبات الأساسية للفحص
+        pip install pyrogram tgcrypto
+        
+        # تثبيت مكتبات التحقق من الصيغة (اختياري)
+        if [ -f requirements.txt ]; then
+          pip install -r requirements.txt
+        fi
+        
+        # ملاحظة: بعض المكتبات مثل deep-translator و SpeechRecognition قد تتطلب إعدادات إضافية
+        # نقوم بتثبيتها هنا لتجنب الأخطاء إذا كان الملف requirements.txt غير موجود
+        pip install deep-translator SpeechRecognition pydub || true
+
+    - name: Check syntax with Python compiler
+      run: |
+        python -m py_compile main.py
+
+    - name: Lint with flake8 (Optional)
+      run: |
+        pip install flake8
+        # إيقاف البناء في حالة وجود أخطاء حرجة فقط (يمكن تعديل المعايير)
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # تحذيرات أخرى لا توقف البناء
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
